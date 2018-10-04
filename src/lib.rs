@@ -18,7 +18,7 @@ extern crate wasm_bindgen;
 extern crate web_sys;
 
 use log::{Level, Log, Metadata, Record};
-use wasm_bindgen::JsValue;
+use wasm_bindgen::prelude::*;
 use web_sys::console;
 
 /// Specifies what to be logged
