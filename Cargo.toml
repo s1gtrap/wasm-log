@@ -1,0 +1,14 @@
+[package]
+name = "wasm-logger"
+version = "0.1.0"
+authors = ["Limira"]
+license = "MIT/Apache-2.0"
+categories = ["wasm"]
+repository = "https://gitlab.com/limira-rs/wasm-logger"
+keywords = ["wasm", "front-end", "logger"]
+description = "A simple logger for wasm front-end app written in Rust"
+
+[dependencies]
+wasm-bindgen = "0.2"
+web-sys = { version="0.3", features=["console"] }
+log = "0.4"
