@@ -16,10 +16,12 @@
 extern crate log;
 extern crate wasm_bindgen;
 extern crate web_sys;
+extern crate js_sys;
 
 use log::{Level, Log, Metadata, Record};
 use wasm_bindgen::prelude::*;
 use web_sys::console;
+use js_sys::JsString;
 
 /// Specifies what to be logged
 pub struct Config {
@@ -47,26 +49,26 @@ impl Config {
 
 /// The log styles
 struct Style {
-    lvl_trace: JsValue,
-    lvl_debug: JsValue,
-    lvl_info: JsValue,
-    lvl_warn: JsValue,
-    lvl_error: JsValue,
-    tgt: JsValue,
-    args: JsValue,
+    lvl_trace: String,
+    lvl_debug: String,
+    lvl_info: String,
+    lvl_warn: String,
+    lvl_error: String,
+    tgt: String,
+    args: String,
 }
 
 impl Style {
     fn new() -> Style {
         let base = String::from("color: white; padding: 0 3px; background:");
         Style {
-            lvl_trace: JsValue::from_str(&(format!("{} darkgray;", base))),
-            lvl_debug: JsValue::from_str(&(format!("{} darkgreen;", base))),
-            lvl_info: JsValue::from_str(&(format!("{} green;", base))),
-            lvl_warn: JsValue::from_str(&(format!("{} gold;", base))),
-            lvl_error: JsValue::from_str(&(format!("{} red;", base))),
-            tgt: JsValue::from_str("font-weight: bold; color: inherit"),
-            args: JsValue::from_str("background: inherit; color: inherit"),
+            lvl_trace: format!("{} darkgray;", base),
+            lvl_debug: format!("{} darkgreen;", base),
+            lvl_info: format!("{} green;", base),
+            lvl_warn: format!("{} gold;", base),
+            lvl_error: format!("{} red;", base),
+            tgt: String::from("font-weight: bold; color: inherit"),
+            args: String::from("background: inherit; color: inherit"),
         }
     }
 }
@@ -89,43 +91,42 @@ impl Log for WasmLogger {
     fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
             let style = &self.style;
-            let s = JsValue::from_str(&format!(
+            let s = JsString::from(format!(
                 "[%c{: <5}%c {}%c] {}",
                 record.level(),
                 record.target(),
                 record.args()
             ));
+            let tgt_style = JsString::from(style.tgt.clone());
+            let args_style = JsString::from(style.args.clone());
+
             match record.level() {
                 Level::Trace => console::log_4(&s,
-                                               &style.lvl_trace,
-                                               &style.tgt,
-                                               &style.args),
+                                               &JsString::from(style.lvl_trace.clone()),
+                                               &tgt_style,
+                                               &args_style),
                 Level::Debug => console::debug_4(&s,
-                                                 &style.lvl_debug,
-                                                 &style.tgt,
-                                                 &style.args),
+                                                 &JsString::from(style.lvl_debug.clone()),
+                                                 &tgt_style,
+                                                 &args_style),
                 Level::Info => console::info_4(&s,
-                                               &style.lvl_info,
-                                               &style.tgt,
-                                               &style.args),
+                                               &JsString::from(style.lvl_info.clone()),
+                                               &tgt_style,
+                                               &args_style),
                 Level::Warn => console::warn_4(&s,
-                                               &style.lvl_warn,
-                                               &style.tgt,
-                                               &style.args),
+                                               &JsString::from(style.lvl_warn.clone()),
+                                               &tgt_style,
+                                               &args_style),
                 Level::Error => console::error_4(&s,
-                                                 &style.lvl_error,
-                                                 &style.tgt,
-                                                 &style.args),
+                                                 &JsString::from(style.lvl_error.clone()),
+                                                 &tgt_style,
+                                                 &args_style),
             }
         }
     }
 
     fn flush(&self) {}
 }
-
-/// Since wasm doesn't support thread yet, no worry about Send and Sync for now
-unsafe impl Send for WasmLogger {}
-unsafe impl Sync for WasmLogger {}
 
 /// Initialize the logger which the given config. If failed, it will log a message to the the browser console.
 pub fn init(config: Config) {
