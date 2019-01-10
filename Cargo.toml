@@ -11,5 +11,4 @@ description = "A simple logger for wasm front-end app written in Rust"
 [dependencies]
 wasm-bindgen = "0.2"
 web-sys = { version="0.3", features=["console"] }
-js-sys = "0.3"
 log = "0.4"

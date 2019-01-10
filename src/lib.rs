@@ -16,12 +16,10 @@
 extern crate log;
 extern crate wasm_bindgen;
 extern crate web_sys;
-extern crate js_sys;
 
 use log::{Level, Log, Metadata, Record};
 use wasm_bindgen::prelude::*;
 use web_sys::console;
-use js_sys::JsString;
 
 /// Specifies what to be logged
 pub struct Config {
@@ -91,34 +89,34 @@ impl Log for WasmLogger {
     fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
             let style = &self.style;
-            let s = JsString::from(format!(
+            let s = JsValue::from_str(&format!(
                 "[%c{: <5}%c {}%c] {}",
                 record.level(),
                 record.target(),
                 record.args()
             ));
-            let tgt_style = JsString::from(style.tgt.clone());
-            let args_style = JsString::from(style.args.clone());
+            let tgt_style = JsValue::from_str(&style.tgt);
+            let args_style = JsValue::from_str(&style.args);
 
             match record.level() {
                 Level::Trace => console::log_4(&s,
-                                               &JsString::from(style.lvl_trace.clone()),
+                                               &JsValue::from_str(&style.lvl_trace),
                                                &tgt_style,
                                                &args_style),
                 Level::Debug => console::debug_4(&s,
-                                                 &JsString::from(style.lvl_debug.clone()),
+                                                 &JsValue::from(&style.lvl_debug),
                                                  &tgt_style,
                                                  &args_style),
                 Level::Info => console::info_4(&s,
-                                               &JsString::from(style.lvl_info.clone()),
+                                               &JsValue::from(&style.lvl_info),
                                                &tgt_style,
                                                &args_style),
                 Level::Warn => console::warn_4(&s,
-                                               &JsString::from(style.lvl_warn.clone()),
+                                               &JsValue::from(&style.lvl_warn),
                                                &tgt_style,
                                                &args_style),
                 Level::Error => console::error_4(&s,
-                                                 &JsString::from(style.lvl_error.clone()),
+                                                 &JsValue::from(&style.lvl_error),
                                                  &tgt_style,
                                                  &args_style),
             }
