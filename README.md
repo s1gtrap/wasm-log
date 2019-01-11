@@ -37,5 +37,9 @@ Logging:
     log::error!("Error message");
 ```
 
+## Logging in Rust
+
+For more information about how to use loggers in Rust, see [log](https://crates.io/crates/log).
+
 ## License
 [MIT](http://opensource.org/licenses/MIT)
