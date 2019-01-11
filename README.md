@@ -1,4 +1,4 @@
-# A simple logger for front-end wasm web app
+# wasm-logger
 
 `Cargo.toml`
 ```
@@ -6,7 +6,7 @@
 log = "0.4"
 wasm-logger = "0.1.0"
 ```
-In your app:
+## Rust 2015
 
 ```rust
 #[macro_use]
@@ -19,5 +19,23 @@ Initialize `wasm-logger` when your app start:
 wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));
 ```
 
-# License
+Logging:
+```rust
+    info!("Some info");
+    error!("Error message");
+```
+
+## Rust 2018
+In Rust 2018 you don't have to `extern crate`, just initialize `wasm-logger` when your app start:
+```rust
+wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));
+```
+
+Logging:
+```rust
+    log::info!("Some info");
+    log::error!("Error message");
+```
+
+## License
 [MIT](http://opensource.org/licenses/MIT)
