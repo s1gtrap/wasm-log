@@ -1,22 +1,18 @@
 //! A simple logger for front end wasm web app.
 //!
-//! For more information about how to use loggers in Rust, see [log](https://crates.io/crates/log).
-//!
+//! If you use Rust 2015:
 //! ```rust
 //!     #[macro_use]
 //!     extern crate log;
 //!     extern crate wasm_logger;
 //! ```
+//!
 //! Add the following line to the initialization code of your app:
 //! ```rust
 //!     wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));
 //! ```
-
+//! For more information about how to use loggers in Rust, see [log](https://crates.io/crates/log).
 #[deny(missing_docs)]
-extern crate log;
-extern crate wasm_bindgen;
-extern crate web_sys;
-
 use log::{Level, Log, Metadata, Record};
 use wasm_bindgen::prelude::*;
 use web_sys::console;
@@ -78,7 +74,7 @@ struct WasmLogger {
 }
 
 impl Log for WasmLogger {
-    fn enabled(&self, metadata: &Metadata) -> bool {
+    fn enabled(&self, metadata: &Metadata<'_>) -> bool {
         if let Some(ref prefix) = self.config.path_prefix {
             metadata.target().starts_with(prefix)
         } else {
@@ -86,7 +82,7 @@ impl Log for WasmLogger {
         }
     }
 
-    fn log(&self, record: &Record) {
+    fn log(&self, record: &Record<'_>) {
         if self.enabled(record.metadata()) {
             let style = &self.style;
             let s = JsValue::from_str(&format!(
@@ -99,26 +95,30 @@ impl Log for WasmLogger {
             let args_style = JsValue::from_str(&style.args);
 
             match record.level() {
-                Level::Trace => console::log_4(&s,
-                                               &JsValue::from_str(&style.lvl_trace),
-                                               &tgt_style,
-                                               &args_style),
-                Level::Debug => console::debug_4(&s,
-                                                 &JsValue::from(&style.lvl_debug),
-                                                 &tgt_style,
-                                                 &args_style),
-                Level::Info => console::info_4(&s,
-                                               &JsValue::from(&style.lvl_info),
-                                               &tgt_style,
-                                               &args_style),
-                Level::Warn => console::warn_4(&s,
-                                               &JsValue::from(&style.lvl_warn),
-                                               &tgt_style,
-                                               &args_style),
-                Level::Error => console::error_4(&s,
-                                                 &JsValue::from(&style.lvl_error),
-                                                 &tgt_style,
-                                                 &args_style),
+                Level::Trace => console::log_4(
+                    &s,
+                    &JsValue::from(&style.lvl_trace),
+                    &tgt_style,
+                    &args_style,
+                ),
+                Level::Debug => console::debug_4(
+                    &s,
+                    &JsValue::from(&style.lvl_debug),
+                    &tgt_style,
+                    &args_style,
+                ),
+                Level::Info => {
+                    console::info_4(&s, &JsValue::from(&style.lvl_info), &tgt_style, &args_style)
+                }
+                Level::Warn => {
+                    console::warn_4(&s, &JsValue::from(&style.lvl_warn), &tgt_style, &args_style)
+                }
+                Level::Error => console::error_4(
+                    &s,
+                    &JsValue::from(&style.lvl_error),
+                    &tgt_style,
+                    &args_style,
+                ),
             }
         }
     }
@@ -129,7 +129,10 @@ impl Log for WasmLogger {
 /// Initialize the logger which the given config. If failed, it will log a message to the the browser console.
 pub fn init(config: Config) {
     let max_level = config.level;
-    let wl = WasmLogger { config, style: Style::new() };
+    let wl = WasmLogger {
+        config,
+        style: Style::new(),
+    };
 
     match log::set_boxed_logger(Box::new(wl)) {
         Ok(_) => log::set_max_level(max_level.to_level_filter()),
