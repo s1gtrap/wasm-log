@@ -37,6 +37,15 @@ Logging:
     log::error!("Error message");
 ```
 
+## Log for specific module only
+
+You can provide a path prefix:
+```
+wasm_logger::init(wasm_logger::Config::with_prefix(log::Level::Debug, "some::module"));
+```
+
+then, `wasm-logger` only logs message from `some::module` 
+
 ## Logging in Rust
 
 For more information about how to use loggers in Rust, see [log](https://crates.io/crates/log).

@@ -1,17 +1,6 @@
 //! A simple logger for front end wasm web app.
 //!
-//! If you use Rust 2015:
-//! ```rust
-//!     #[macro_use]
-//!     extern crate log;
-//!     extern crate wasm_logger;
-//! ```
-//!
-//! Add the following line to the initialization code of your app:
-//! ```rust
-//!     wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));
-//! ```
-//! For more information about how to use loggers in Rust, see [log](https://crates.io/crates/log).
+//! Please see [README](https://gitlab.com/limira-rs/wasm-logger/blob/master/README.md) for documentation.
 #[deny(missing_docs)]
 use log::{Level, Log, Metadata, Record};
 use wasm_bindgen::prelude::*;
