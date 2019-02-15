@@ -84,13 +84,13 @@ impl Log for WasmLogger {
             let args_style = JsValue::from_str(&style.args);
 
             match record.level() {
-                Level::Trace => console::log_4(
+                Level::Trace => console::debug_4(
                     &s,
                     &JsValue::from(&style.lvl_trace),
                     &tgt_style,
                     &args_style,
                 ),
-                Level::Debug => console::debug_4(
+                Level::Debug => console::log_4(
                     &s,
                     &JsValue::from(&style.lvl_debug),
                     &tgt_style,
