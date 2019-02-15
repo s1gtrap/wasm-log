@@ -6,7 +6,7 @@ license = "MIT/Apache-2.0"
 categories = ["wasm", "development-tools::debugging"]
 repository = "https://gitlab.com/limira-rs/wasm-logger"
 keywords = ["wasm", "front-end", "logger", "console", "log"]
-description = "A simple logger for wasm front-end app written in Rust"
+description = "A pretty logger for wasm front-end app written in Rust"
 readme = "./README.md"
 edition = "2018"
 
