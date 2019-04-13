@@ -1,7 +1,7 @@
 //! A simple logger for front end wasm web app.
 //!
 //! Please see [README](https://gitlab.com/limira-rs/wasm-logger/blob/master/README.md) for documentation.
-#[deny(missing_docs)]
+#![deny(missing_docs)]
 use log::{Level, Log, Metadata, Record};
 use wasm_bindgen::prelude::*;
 use web_sys::console;
@@ -45,11 +45,11 @@ impl Style {
     fn new() -> Style {
         let base = String::from("color: white; padding: 0 3px; background:");
         Style {
-            lvl_trace: format!("{} darkgray;", base),
-            lvl_debug: format!("{} darkgreen;", base),
+            lvl_trace: format!("{} gray;", base),
+            lvl_debug: format!("{} blue;", base),
             lvl_info: format!("{} green;", base),
-            lvl_warn: format!("{} gold;", base),
-            lvl_error: format!("{} red;", base),
+            lvl_warn: format!("{} orange;", base),
+            lvl_error: format!("{} darkred;", base),
             tgt: String::from("font-weight: bold; color: inherit"),
             args: String::from("background: inherit; color: inherit"),
         }
@@ -75,10 +75,11 @@ impl Log for WasmLogger {
         if self.enabled(record.metadata()) {
             let style = &self.style;
             let s = JsValue::from_str(&format!(
-                "[%c{: <5}%c {}%c] {}",
+                "[%c{}%c {}:{}%c] {}",
                 record.level(),
-                record.target(),
-                record.args()
+                record.line().map_or_else(|| "[Unknown]".to_string(), |line| line.to_string()),
+                record.file().unwrap_or_else(|| record.target()),
+                record.args(),
             ));
             let tgt_style = JsValue::from_str(&style.tgt);
             let args_style = JsValue::from_str(&style.args);
