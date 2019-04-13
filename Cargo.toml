@@ -1,16 +1,22 @@
 [package]
 name = "wasm-logger"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Limira"]
 license = "MIT/Apache-2.0"
 categories = ["wasm", "development-tools::debugging"]
 repository = "https://gitlab.com/limira-rs/wasm-logger"
 keywords = ["wasm", "front-end", "logger", "console", "log"]
-description = "A pretty logger for wasm front-end app written in Rust"
+description = "A logger that sends a message with its Rust source's line and filename to the browser console"
 readme = "./README.md"
+documentation = "https://docs.rs/wasm-logger"
 edition = "2018"
 
 [dependencies]
 wasm-bindgen = "0.2"
 web-sys = { version="0.3", features=["console"] }
 log = "0.4"
+
+[workspace]
+members = [
+    "examples/log"
+]

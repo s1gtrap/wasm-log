@@ -75,7 +75,7 @@ impl Log for WasmLogger {
         if self.enabled(record.metadata()) {
             let style = &self.style;
             let s = JsValue::from_str(&format!(
-                "[%c{}%c {}:{}%c] {}",
+                "%c{}%c {}:{}%c\n{}",
                 record.level(),
                 record.line().map_or_else(|| "[Unknown]".to_string(), |line| line.to_string()),
                 record.file().unwrap_or_else(|| record.target()),
@@ -117,6 +117,15 @@ impl Log for WasmLogger {
 }
 
 /// Initialize the logger which the given config. If failed, it will log a message to the the browser console.
+///
+/// ## Examples
+/// ```rust
+/// wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));
+/// ```
+/// or
+/// ```rust
+/// wasm_logger::init(wasm_logger::Config::with_prefix(log::Level::Debug, "some::module"));
+/// ```
 pub fn init(config: Config) {
     let max_level = config.level;
     let wl = WasmLogger {

@@ -1,5 +1,10 @@
 # `wasm-logger` change log
 
+## v0.1.3
+
+Changes:
+* Log `$LineNumber:$FilePath` instead of target
+
 ## v0.1.2
 
 Changes
