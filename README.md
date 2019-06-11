@@ -10,6 +10,15 @@ $LOG_LEVEL $LINE_NUMBER:$FILE_PATH
 $MESSAGE
 ```
 
+In v0.1.4, the default Config will put the message on the same line as other info ([see more](https://gitlab.com/limira-rs/wasm-logger/issues/1)).
+If you want them on a separate line as the screenshot above, you must config like this:
+```rust
+wasm_logger::init(
+    wasm_logger::Config::new(log::Level::Debug)
+        .message_on_new_line()
+);
+```
+
 ## Usage
 
 **Note**: For more information about how to use loggers in Rust, see [log](https://crates.io/crates/log).
@@ -18,7 +27,7 @@ $MESSAGE
 ```
 [dependencies]
 log = "0.4"
-wasm-logger = "0.1.3"
+wasm-logger = "0.1.4"
 ```
 Initialize `wasm-logger` when your app start:
 ```rust
