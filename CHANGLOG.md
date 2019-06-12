@@ -3,7 +3,6 @@
 ## v0.1.4
 
 * Allow to config on where messages are logged: On the same line or on its own line. Default to one-line.
-* impl Default for Config
 
 ## v0.1.3
 
