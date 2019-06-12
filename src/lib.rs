@@ -6,10 +6,19 @@ use log::{Level, Log, Metadata, Record};
 use wasm_bindgen::prelude::*;
 use web_sys::console;
 
-/// Specifies what to be logged
+/// Specify what to be logged
 pub struct Config {
     level: Level,
     path_prefix: Option<String>,
+    message_location: MessageLocation,
+}
+
+/// Specify where the message will be logged.
+pub enum MessageLocation {
+    /// The message will be on the same line as other info (level, path...)
+    SameLine,
+    /// The message will be on its own line, a new after other info.
+    NewLine,
 }
 
 impl Config {
@@ -18,6 +27,7 @@ impl Config {
         Self {
             level,
             path_prefix: None,
+            message_location: MessageLocation::SameLine,
         }
     }
 
@@ -26,7 +36,14 @@ impl Config {
         Self {
             level,
             path_prefix: Some(path_prefix.to_string()),
+            message_location: MessageLocation::SameLine,
         }
+    }
+
+    /// Put the message on a new line
+    pub fn message_on_new_line(mut self) -> Self {
+        self.message_location = MessageLocation::NewLine;
+        self
     }
 }
 
@@ -74,13 +91,27 @@ impl Log for WasmLogger {
     fn log(&self, record: &Record<'_>) {
         if self.enabled(record.metadata()) {
             let style = &self.style;
-            let s = JsValue::from_str(&format!(
-                "%c{}%c {}:{}%c\n{}",
-                record.level(),
-                record.line().map_or_else(|| "[Unknown]".to_string(), |line| line.to_string()),
-                record.file().unwrap_or_else(|| record.target()),
-                record.args(),
-            ));
+            let s = match self.config.message_location {
+                MessageLocation::NewLine => format!(
+                    "%c{}%c {}:{}%c\n{}",
+                    record.level(),
+                    record
+                        .line()
+                        .map_or_else(|| "[Unknown]".to_string(), |line| line.to_string()),
+                    record.file().unwrap_or_else(|| record.target()),
+                    record.args(),
+                ),
+                MessageLocation::SameLine => format!(
+                    "[%c{}%c {}:{}%c] {}",
+                    record.level(),
+                    record
+                        .line()
+                        .map_or_else(|| "[Unknown]".to_string(), |line| line.to_string()),
+                    record.file().unwrap_or_else(|| record.target()),
+                    record.args(),
+                ),
+            };
+            let s = JsValue::from_str(&s);
             let tgt_style = JsValue::from_str(&style.tgt);
             let args_style = JsValue::from_str(&style.args);
 
