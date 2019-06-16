@@ -4,13 +4,7 @@ A logger that sends a message with its Rust source's line and filename to the br
 
 ![screenshot](screenshot.png)
 
-The log entry's format is:
-```
-$LOG_LEVEL $LINE_NUMBER:$FILE_PATH
-$MESSAGE
-```
-
-In v0.1.4, the default Config will put the message on the same line as other info ([see more](https://gitlab.com/limira-rs/wasm-logger/issues/1)).
+In v0.1.4 and up, the default Config will put the message on the same line as other info ([see more](https://gitlab.com/limira-rs/wasm-logger/issues/1)).
 If you want them on a separate line as the screenshot above, you must config like this:
 ```rust
 wasm_logger::init(
@@ -26,8 +20,8 @@ wasm_logger::init(
 `Cargo.toml`
 ```
 [dependencies]
-log = "0.4"
-wasm-logger = "0.1.4"
+log = "0.4.6"
+wasm-logger = "0.1.5"
 ```
 Initialize `wasm-logger` when your app start:
 ```rust

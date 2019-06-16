@@ -1,5 +1,9 @@
 # `wasm-logger` change log
 
+## v0.1.5
+
+* Fix dependency: `log = { version="0.4", features=["std"] }`
+
 ## v0.1.4
 
 * Allow to config on where messages are logged: On the same line or on its own line. Default to one-line.
