@@ -2,16 +2,7 @@
 
 A logger that sends a message with its Rust source's line and filename to the browser console. 
 
-![screenshot](screenshot.png)
-
-In v0.1.4 and up, the default Config will put the message on the same line as other info ([see more](https://gitlab.com/limira-rs/wasm-logger/issues/1)).
-If you want them on a separate line as the screenshot above, you must config like this:
-```rust
-wasm_logger::init(
-    wasm_logger::Config::new(log::Level::Debug)
-        .message_on_new_line()
-);
-```
+![screenshot](Screenshot.png)
 
 ## Usage
 
@@ -21,11 +12,12 @@ wasm_logger::init(
 ```
 [dependencies]
 log = "0.4.6"
-wasm-logger = "0.1.5"
+wasm-logger = "0.2.0"
 ```
+
 Initialize `wasm-logger` when your app start:
 ```rust
-wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));
+wasm_logger::init(wasm_logger::Config::default());
 
 // Logging
 log::info!("Some info");
@@ -36,7 +28,7 @@ log::error!("Error message");
 
 You can provide a path prefix:
 ```rust
-wasm_logger::init(wasm_logger::Config::with_prefix(log::Level::Debug, "some::module"));
+wasm_logger::init(wasm_logger::Config::default().module_prefix("some::module"));
 ```
 
 then, `wasm-logger` only logs message from `some::module` 

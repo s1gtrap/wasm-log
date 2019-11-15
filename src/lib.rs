@@ -9,7 +9,7 @@ use web_sys::console;
 /// Specify what to be logged
 pub struct Config {
     level: Level,
-    path_prefix: Option<String>,
+    module_prefix: Option<String>,
     message_location: MessageLocation,
 }
 
@@ -21,26 +21,37 @@ pub enum MessageLocation {
     NewLine,
 }
 
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            level: Level::Debug,
+            module_prefix: None,
+            message_location: MessageLocation::SameLine,
+        }
+    }
+}
+
 impl Config {
     /// Specify the maximum level you want to log
     pub fn new(level: Level) -> Self {
         Self {
             level,
-            path_prefix: None,
+            module_prefix: None,
             message_location: MessageLocation::SameLine,
         }
     }
 
-    /// Both maximum level and path_prefix
-    pub fn with_prefix(level: Level, path_prefix: &str) -> Self {
-        Self {
-            level,
-            path_prefix: Some(path_prefix.to_string()),
-            message_location: MessageLocation::SameLine,
-        }
+    /// Configure the `target` of the logger. If specified, the logger
+    /// only output for `log`s in module that its path starts with
+    /// `module_prefix`. wasm-logger only supports single prefix. Only
+    /// the last call to `module_prefix` has effect if you call it multiple times.
+    pub fn module_prefix(mut self, module_prefix: &str) -> Self {
+        self.module_prefix = Some(module_prefix.to_string());
+        self
     }
 
-    /// Put the message on a new line
+    /// Put the message on a new line, separated from other information
+    /// such as level, file path, line number.
     pub fn message_on_new_line(mut self) -> Self {
         self.message_location = MessageLocation::NewLine;
         self
@@ -81,7 +92,7 @@ struct WasmLogger {
 
 impl Log for WasmLogger {
     fn enabled(&self, metadata: &Metadata<'_>) -> bool {
-        if let Some(ref prefix) = self.config.path_prefix {
+        if let Some(ref prefix) = self.config.module_prefix {
             metadata.target().starts_with(prefix)
         } else {
             true
@@ -91,26 +102,20 @@ impl Log for WasmLogger {
     fn log(&self, record: &Record<'_>) {
         if self.enabled(record.metadata()) {
             let style = &self.style;
-            let s = match self.config.message_location {
-                MessageLocation::NewLine => format!(
-                    "%c{}%c {}:{}%c\n{}",
-                    record.level(),
-                    record
-                        .line()
-                        .map_or_else(|| "[Unknown]".to_string(), |line| line.to_string()),
-                    record.file().unwrap_or_else(|| record.target()),
-                    record.args(),
-                ),
-                MessageLocation::SameLine => format!(
-                    "[%c{}%c {}:{}%c] {}",
-                    record.level(),
-                    record
-                        .line()
-                        .map_or_else(|| "[Unknown]".to_string(), |line| line.to_string()),
-                    record.file().unwrap_or_else(|| record.target()),
-                    record.args(),
-                ),
+            let message_separator = match self.config.message_location {
+                MessageLocation::NewLine => "\n",
+                MessageLocation::SameLine => " ",
             };
+            let s = format!(
+                "%c{}%c {}:{}%c{}{}",
+                record.level(),
+                record.file().unwrap_or_else(|| record.target()),
+                record
+                    .line()
+                    .map_or_else(|| "[Unknown]".to_string(), |line| line.to_string()),
+                message_separator,
+                record.args(),
+            );
             let s = JsValue::from_str(&s);
             let tgt_style = JsValue::from_str(&style.tgt);
             let args_style = JsValue::from_str(&style.args);

@@ -1,5 +1,15 @@
 # `wasm-logger` change log
 
+## v0.2.0
+
+* Add `impl Default for Config`.
+
+Breaking changes:
+* Replace constructor `with_prefix` by `Config::module_prefix`
+
+Output changes:
+* A log entry is now formated as: `$LEVEL $FILE_PATH:$LINE_NUMBER $message`
+
 ## v0.1.5
 
 * Fix dependency: `log = { version="0.4", features=["std"] }`

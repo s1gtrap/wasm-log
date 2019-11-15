@@ -3,7 +3,7 @@ use wasm_bindgen::prelude::*;
 // Called when the wasm module is instantiated
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
-    wasm_logger::init(wasm_logger::Config::new(log::Level::Debug));
+    wasm_logger::init(wasm_logger::Config::default());
     // Use `web_sys`'s global `window` function to get a handle on the global
     // window object.
     let window = web_sys::window().expect("no global `window` exists");
