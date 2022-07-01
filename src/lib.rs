@@ -163,6 +163,19 @@ impl Log for WasmLogger {
 /// wasm_logger::init(wasm_logger::Config::new(log::Level::Debug).module_prefix("some::module"));
 /// ```
 pub fn init(config: Config) {
+    match try_init(config) {
+        Ok(_) => {}
+        Err(e) => console::error_1(&JsValue::from(e.to_string())),
+    }
+}
+
+/// Attempt to initialize the logger with the given config.
+///
+/// # Errors
+///
+/// This function will fail if it is called more than once, or if another
+/// library has already initialized a global logger.
+pub fn try_init(config: Config) -> Result<(), log::SetLoggerError> {
     let max_level = config.level;
     let wl = WasmLogger {
         config,
@@ -170,7 +183,10 @@ pub fn init(config: Config) {
     };
 
     match log::set_boxed_logger(Box::new(wl)) {
-        Ok(_) => log::set_max_level(max_level.to_level_filter()),
-        Err(e) => console::error_1(&JsValue::from(e.to_string())),
+        Ok(_) => {
+            log::set_max_level(max_level.to_level_filter());
+            Ok(())
+        }
+        Err(e) => Err(e),
     }
 }
