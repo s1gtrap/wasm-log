@@ -160,7 +160,7 @@ impl Log for WasmLogger {
 /// ```
 /// or
 /// ```rust
-/// wasm_logger::init(wasm_logger::Config::with_prefix(log::Level::Debug, "some::module"));
+/// wasm_logger::init(wasm_logger::Config::new(log::Level::Debug).module_prefix("some::module"));
 /// ```
 pub fn init(config: Config) {
     let max_level = config.level;
