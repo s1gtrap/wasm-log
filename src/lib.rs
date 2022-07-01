@@ -190,3 +190,9 @@ pub fn try_init(config: Config) -> Result<(), log::SetLoggerError> {
         Err(e) => Err(e),
     }
 }
+
+#[test]
+fn test_try_init() {
+    assert!(try_init(Config::default()).is_ok());
+    assert!(try_init(Config::default()).is_err()); // should fail on second attempt to init
+}
