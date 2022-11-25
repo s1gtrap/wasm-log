@@ -1,5 +1,9 @@
 # `wasm-log` change log
 
+## v0.3.1
+
+* Republish
+
 ## v0.3.0
 
 * Add `try_init` mimicking that of `env_logger`.

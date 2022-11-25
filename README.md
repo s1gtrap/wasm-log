@@ -12,7 +12,7 @@ A logger that sends a message with its Rust source's line and filename to the br
 ```
 [dependencies]
 log = "0.4.6"
-wasm-log = "0.3.0"
+wasm-log = "0.3"
 ```
 
 Initialize `wasm-log` when your app start:
