@@ -1,4 +1,4 @@
-# `wasm-logger` change log
+# `wasm-log` change log
 
 ## v0.2.0
 
