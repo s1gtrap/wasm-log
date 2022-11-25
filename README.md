@@ -1,4 +1,4 @@
-# wasm-logger
+# wasm_logger
 
 A logger that sends a message with its Rust source's line and filename to the browser console. 
 
@@ -12,10 +12,10 @@ A logger that sends a message with its Rust source's line and filename to the br
 ```
 [dependencies]
 log = "0.4.6"
-wasm-logger = "0.2.0"
+wasm_logger = "0.2.0"
 ```
 
-Initialize `wasm-logger` when your app start:
+Initialize `wasm_logger` when your app start:
 ```rust
 wasm_logger::init(wasm_logger::Config::default());
 
@@ -31,7 +31,7 @@ You can provide a path prefix:
 wasm_logger::init(wasm_logger::Config::default().module_prefix("some::module"));
 ```
 
-then, `wasm-logger` only logs message from `some::module` 
+then, `wasm_logger` only logs message from `some::module`
 
 ## Mapping from `log` to console's methods
 `log::error!`, `log::warn!` and `log::info!` call theirs equivalent methods of the browser console. The `console.trace` method outputs some extra trace from the generated JS glue code which we don't want. Therefore, we choose to map:

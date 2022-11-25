@@ -1,4 +1,4 @@
-# Example of wasm-logger
+# Example of wasm_logger
 
 Use for taking a screenshot
 

@@ -1,6 +1,6 @@
 //! A simple logger for front end wasm web app.
 //!
-//! Please see [README](https://gitlab.com/limira-rs/wasm-logger/blob/master/README.md) for documentation.
+//! Please see [README](https://github.com/s1gtrap/wasm_logger/blob/main/README.md) for documentation.
 #![deny(missing_docs)]
 use log::{Level, Log, Metadata, Record};
 use wasm_bindgen::prelude::*;
@@ -43,7 +43,7 @@ impl Config {
 
     /// Configure the `target` of the logger. If specified, the logger
     /// only output for `log`s in module that its path starts with
-    /// `module_prefix`. wasm-logger only supports single prefix. Only
+    /// `module_prefix`. wasm_logger only supports single prefix. Only
     /// the last call to `module_prefix` has effect if you call it multiple times.
     pub fn module_prefix(mut self, module_prefix: &str) -> Self {
         self.module_prefix = Some(module_prefix.to_string());
