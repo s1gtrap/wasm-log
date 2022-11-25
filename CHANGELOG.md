@@ -1,5 +1,9 @@
 # `wasm-log` change log
 
+## v0.3.0
+
+* Add `try_init` mimicking that of `env_logger`.
+
 ## v0.2.0
 
 * Add `impl Default for Config`.

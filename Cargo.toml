@@ -1,6 +1,6 @@
 [package]
 name = "wasm-log"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Limira"]
 license = "MIT OR Apache-2.0"
 categories = ["wasm", "development-tools::debugging"]
