@@ -17,7 +17,7 @@ wasm-log = "0.3"
 
 Initialize `wasm-log` when your app start:
 ```rust
-wasm-log::init(wasm-log::Config::default());
+wasm-log::init(wasm_log::Config::default());
 
 // Logging
 log::info!("Some info");
@@ -28,7 +28,7 @@ log::error!("Error message");
 
 You can provide a path prefix:
 ```rust
-wasm-log::init(wasm-log::Config::default().module_prefix("some::module"));
+wasm_log::init(wasm_log::Config::default().module_prefix("some::module"));
 ```
 
 then, `wasm-log` only logs message from `some::module`
