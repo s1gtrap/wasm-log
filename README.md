@@ -17,7 +17,7 @@ wasm-log = "0.3"
 
 Initialize `wasm-log` when your app start:
 ```rust
-wasm-log::init(wasm_log::Config::default());
+wasm_log::init(wasm_log::Config::default());
 
 // Logging
 log::info!("Some info");
